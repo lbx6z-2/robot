@@ -1,0 +1,29 @@
+#include <opencv2/core/core.hpp>
+#include <opencv2/opencv.hpp>
+#include <iostream>
+#include "transform.h"
+using namespace std;
+using namespace cv;
+
+void onMouse(int event, int u, int v, int, void* _trans) {
+    if (event == CV_EVENT_LBUTTONDOWN) {
+        Transform* trans = (Transform*)_trans;
+        cout << "img: " << u << ' ' << v << endl;
+        cout << "real: " << trans->uv_to_xy(u, v) << endl;
+    }
+}
+
+int main() {
+    Transform trans(2);
+    cout << trans.xy_to_uv(982.034, -7.39239) << endl;
+    VideoCapture cap(0);
+    Mat mat;
+    while (1) {
+        cap >> mat;
+        imshow("mat", mat);
+        setMouseCallback("mat", onMouse, &trans);
+        if (waitKey(30) > 0)
+            break;
+    }
+    return 0;
+}
